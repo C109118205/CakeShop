@@ -9,36 +9,38 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteX="-63dp"
         tools:layout_editor_absoluteY="0dp">
 
         <Button
             android:id="@+id/LoginUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="80dp"
-            android:layout_marginEnd="31dp"
-            android:text="Login"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="90dp"
+            android:text="@string/Login"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/RegisterPageButton"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/RegisterPageButton"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.483" />
+            app:layout_constraintVertical_bias="0.484" />
 
         <Button
             android:id="@+id/RegisterPageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="80dp"
-            android:text="Register"
+            android:layout_marginStart="90dp"
+            android:layout_marginEnd="25dp"
+            android:text="@string/register"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.256"
-            app:layout_constraintStart_toEndOf="@+id/LoginUserButton"
+            app:layout_constraintEnd_toStartOf="@+id/LoginUserButton"
+            app:layout_constraintHorizontal_bias="0.604"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.483" />
+            app:layout_constraintVertical_bias="0.484" />
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="223dp"
             android:layout_marginTop="92dp"

@@ -1,5 +1,7 @@
 package com.example.cakeshop;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SyncAdapterType;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,7 +32,6 @@ private FragmentLoginBinding binding;
         super.onCreate(savedInstanceState);
         // 建立SQLiteOpenHelper物件
         sqlDataBaseHelper = new SqlDataBaseHelper(this.getContext(),DataBaseName,null,DataBaseVersion,DataBaseTable);
-        db = sqlDataBaseHelper.getWritableDatabase(); // 開啟資料庫
 
 
     }
@@ -42,6 +43,9 @@ private FragmentLoginBinding binding;
         View root = binding.getRoot();
         return root;
     }
+
+
+    public boolean Login;
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.RegisterPageButton.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +59,7 @@ private FragmentLoginBinding binding;
             @Override
             public void onClick(View view) {
 
+                db = sqlDataBaseHelper.getWritableDatabase(); // 開啟資料庫
                 String username = binding.EditUserName.getText().toString();
                 String password = binding.editTextTextPassword.getText().toString();
 
@@ -77,34 +82,49 @@ private FragmentLoginBinding binding;
                         null,
                         null
                 );
+                int cursorCount = cursor.getCount();
+                cursor.close();
+                db.close();
 
-                if (cursor.moveToNext()){
-                    System.out.println("login success");
+                if (cursorCount>0){
+                    getDialog(Login=true,username);
                 }
                 else{
-                    System.out.println("login failed");
+                    getDialog(Login=false,null);
 
                 }
-
-
-
-//
-//                AccountArray = new String[c.getCount()];
-//                AccountID = new String[c.getCount()];
-//                PasswordArray = new String[c.getCount()];
-//                c.moveToFirst();
-//                for(int i=0;i<c.getCount();i++){
-//                    AccountID[i] = c.getString(0);
-//                    AccountArray[i] = c.getString(1);
-//                    PasswordArray[i] = c.getString(2);
-//                    c.moveToNext();
-//                }
-
-
-
-            }
+           }
         });
 
     }
+    private void getDialog(boolean Login,String username) {
+        AlertDialog.Builder dialogregister = new AlertDialog.Builder(getActivity());
+        dialogregister.setCancelable(false);
+        if (Login){
+            dialogregister.setTitle("登入成功");
+            dialogregister.setMessage("登入成功，歡迎: " + username);
+            dialogregister.setNegativeButton("確認", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    NavHostFragment.findNavController(LoginFragment.this)
+                            .navigate(R.id.action_LoginFragment_to_HomeFragment);
+                }
+            });
+        }
+        else
+        {
+            dialogregister.setTitle("登入失敗");
+            dialogregister.setMessage("密碼不正確或帳號不正確");
+            dialogregister.setNegativeButton("確認", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+        }
 
+
+        dialogregister.create().show();
+    }
 }
