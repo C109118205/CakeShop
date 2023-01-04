@@ -27,10 +27,32 @@ private FragmentShopBinding binding;
                 new ViewModelProvider(this).get(ShopViewModel.class);
         binding = FragmentShopBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        final TextView textView = binding.textShop;
-        shopViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    binding.chocolateBuy.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+
+        }
+    });
+
+    binding.strawberryBuy.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+
+        }
+    });
+
+    }
+
+
+
+
+
 
     @Override
     public void onDestroyView() {

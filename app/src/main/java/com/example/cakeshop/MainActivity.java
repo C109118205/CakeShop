@@ -1,5 +1,6 @@
 package com.example.cakeshop;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
@@ -16,9 +17,14 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.cakeshop.databinding.ActivityMainBinding;
+import android.net.Uri;
+
+import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.protocol.HTTP;
+
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,14 +42,22 @@ public class MainActivity extends AppCompatActivity {
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType(HTTP.PLAIN_TEXT_TYPE);
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {"C109118205@nkust.edu.tw"}); // recipients
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Email subject");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "Email message text");
+                emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("content://path/to/email/attachment"));
+                startActivity(emailIntent);
+
+                Snackbar.make(view, "open your e-mail", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.HomeFragment, R.id.nav_shop)
+                R.id.HomeFragment, R.id.nav_shop,R.id.nav_history)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -62,16 +76,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()){
+            case R.id.action_Search:
+                Uri webpage = Uri.parse("https://www.google.com");
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+                startActivity(webIntent);
+                break;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_setting:
+                Toast.makeText(this, "settings...", Toast.LENGTH_SHORT).show();
+                break;
+
+            default:
+            return super.onOptionsItemSelected(item);
         }
-
         return super.onOptionsItemSelected(item);
     }
 
