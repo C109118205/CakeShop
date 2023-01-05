@@ -23,7 +23,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/RegisterPageButton"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.484" />
+            app:layout_constraintVertical_bias="0.528" />
 
         <Button
             android:id="@+id/RegisterPageButton"
@@ -37,12 +37,12 @@
             app:layout_constraintHorizontal_bias="0.604"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.484" />
+            app:layout_constraintVertical_bias="0.528" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"
-            android:layout_width="0dp"
-            android:layout_height="223dp"
+            android:layout_width="414dp"
+            android:layout_height="249dp"
             android:layout_marginTop="92dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
@@ -81,16 +81,16 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout4"
                     android:layout_width="340dp"
                     android:layout_height="61dp"
                     android:layout_marginBottom="40dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.507"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                    app:layout_constraintVertical_bias="1.0">
+                    app:layout_constraintVertical_bias="0.4">
 
                     <TextView
                         android:id="@+id/password"
@@ -107,6 +107,19 @@
                         android:inputType="textPassword"
                         tools:ignore="TouchTargetSizeCheck" />
                 </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/remember"
+                    android:layout_width="110dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="記住我"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.125"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+                    app:layout_constraintVertical_bias="0.25" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

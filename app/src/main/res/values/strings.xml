@@ -29,4 +29,14 @@
     <string name="action_login">登入</string>
     <string name="action_logout">登出</string>
     <string name="menu_history">歷史紀錄</string>
+    <string name="confirm">確認</string>
+    <string name="todo">TODO</string>
+
+    <string-array name="product_cost">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

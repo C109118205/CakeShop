@@ -1,5 +1,6 @@
 package com.example.cakeshop;
 
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SyncAdapterType;
@@ -12,15 +13,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.content.SharedPreferences;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.cakeshop.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends Fragment {
+    private SharedPreferences preferences;
+    private  SharedPreferences.Editor editor;
+    private String sharedPrefFile =
+            "com.example.CakeShop.sharedprefs";
 
-private FragmentLoginBinding binding;
+    private FragmentLoginBinding binding;
     private static final String DataBaseName = "DataBaseIt";
     private static final int DataBaseVersion = 1;
     private static String DataBaseTable = "Users";
@@ -33,14 +43,25 @@ private FragmentLoginBinding binding;
         // 建立SQLiteOpenHelper物件
         sqlDataBaseHelper = new SqlDataBaseHelper(this.getContext(),DataBaseName,null,DataBaseVersion,DataBaseTable);
 
-
     }
-    public static String[] AccountArray,AccountID,PasswordArray;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        EditText username = (EditText) binding.EditUserName;
+        EditText password = (EditText) binding.editTextTextPassword;
+        CheckBox remember = (CheckBox) binding.remember;
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isRemember = preferences.getBoolean("remember_password",false);
+        if (isRemember){
+            String edit_account = preferences.getString("account","");
+            String edit_password = preferences.getString("password","");
+            username.setText(edit_account);
+            password.setText(edit_password);
+            remember.setChecked(true);
+        }
         return root;
     }
 
@@ -88,6 +109,20 @@ private FragmentLoginBinding binding;
 
                 if (cursorCount>0){
                     getDialog(Login=true,username);
+                    editor = preferences.edit();
+
+                    if (binding.remember.isChecked()){
+                        editor.putBoolean("remember_password",true);
+                        editor.putString("account",username);
+                        editor.putString("password",password);
+                        Toast.makeText(getActivity(), "成功記住", Toast.LENGTH_SHORT).show();
+
+                    }else {
+                        editor.clear();
+                        Toast.makeText(getActivity(), "不記住", Toast.LENGTH_SHORT).show();
+                    }
+                    editor.apply();
+
                 }
                 else{
                     getDialog(Login=false,null);

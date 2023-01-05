@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 public class SqlDataBaseHelper extends SQLiteOpenHelper {
 
-    private  static  final String DataBaseName = "DataBaseIt";
+    private static final String DataBaseName = "DataBaseIt";
     private static final int DataBaseVersion = 1;
 
     public SqlDataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version,String TableName) {
