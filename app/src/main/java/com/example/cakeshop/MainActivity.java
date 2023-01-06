@@ -1,6 +1,7 @@
 package com.example.cakeshop;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
@@ -8,11 +9,14 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -31,9 +35,24 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    private CustomReceiver mReceiver = new CustomReceiver();
+    private static final String ACTION_CUSTOM_BROADCAST =
+            BuildConfig.APPLICATION_ID + ".ACTION_CUSTOM_BROADCAST";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+
+        // Register the receiver using the activity context.
+        this.registerReceiver(mReceiver, filter);
+
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(mReceiver,
+                        new IntentFilter(ACTION_CUSTOM_BROADCAST));
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -67,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -98,5 +118,14 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onDestroy() {
+        // Unregister the receiver.
+        this.unregisterReceiver(mReceiver);
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this)
+                .unregisterReceiver(mReceiver);
     }
 }
