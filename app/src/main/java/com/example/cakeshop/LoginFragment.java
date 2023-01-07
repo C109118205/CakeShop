@@ -2,7 +2,12 @@ package com.example.cakeshop;
 
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SyncAdapterType;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,6 +16,8 @@ import android.os.Bundle;
 import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.preference.PreferenceManager;
@@ -20,6 +27,7 @@ import android.view.ViewGroup;
 import android.content.SharedPreferences;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cakeshop.databinding.FragmentLoginBinding;
@@ -29,6 +37,8 @@ public class LoginFragment extends Fragment {
     private  SharedPreferences.Editor editor;
     private String sharedPrefFile =
             "com.example.CakeShop.sharedprefs";
+    private static final String LOGIN_SUCCESS_ACTION = "com.example.LOGIN_SUCCESS";
+    private static final String USERNAME_EXTRA = "com.example.USERNAME";
 
     private FragmentLoginBinding binding;
     private static final String DataBaseName = "DataBaseIt";
@@ -66,9 +76,13 @@ public class LoginFragment extends Fragment {
     }
 
 
+
     public boolean Login;
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
+
         binding.RegisterPageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +106,6 @@ public class LoginFragment extends Fragment {
                 String selection = "account = ? and password = ?";
                 String[] selectionArgs = { username ,password};
 
-//                String query = "select * from "+ DataBaseTable + " where account = ? and password = ?";
 
                 Cursor cursor  = db.query(
                         DataBaseTable,
@@ -104,11 +117,19 @@ public class LoginFragment extends Fragment {
                         null
                 );
                 int cursorCount = cursor.getCount();
-                cursor.close();
-                db.close();
+
 
                 if (cursorCount>0){
                     getDialog(Login=true,username);
+                    Intent intent = new Intent(LOGIN_SUCCESS_ACTION);
+                    intent.putExtra(USERNAME_EXTRA, username);
+                    LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+                    ContentValues values = new ContentValues();
+                    values.put("isOnline",1);
+                    String isOnline_selection = "account = ?";
+                    String[] isOnline_selectionArgs = {username};
+                    int count = db.update(DataBaseTable,values,isOnline_selection,isOnline_selectionArgs);
+
                     editor = preferences.edit();
 
                     if (binding.remember.isChecked()){
@@ -128,10 +149,13 @@ public class LoginFragment extends Fragment {
                     getDialog(Login=false,null);
 
                 }
+                cursor.close();
+                db.close();
            }
         });
 
     }
+
     private void getDialog(boolean Login,String username) {
         AlertDialog.Builder dialogregister = new AlertDialog.Builder(getActivity());
         dialogregister.setCancelable(false);
@@ -161,5 +185,29 @@ public class LoginFragment extends Fragment {
 
 
         dialogregister.create().show();
+    }
+
+
+//
+    private BroadcastReceiver LoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(LOGIN_SUCCESS_ACTION)) {
+                String username = intent.getStringExtra(USERNAME_EXTRA);
+                // Update UI here
+            }
+        }
+    };
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(LOGIN_SUCCESS_ACTION);
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(LoginReceiver, filter);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(LoginReceiver);
     }
 }

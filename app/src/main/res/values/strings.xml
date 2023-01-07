@@ -31,6 +31,8 @@
     <string name="menu_history">歷史紀錄</string>
     <string name="confirm">確認</string>
     <string name="todo">TODO</string>
+    <string name="logout">登出</string>
+    <string name="Guest">Guest</string>
 
     <string-array name="product_cost">
         <item>1</item>

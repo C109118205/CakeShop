@@ -1,7 +1,11 @@
 package com.example.cakeshop;
 
+import android.content.BroadcastReceiver;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
@@ -28,6 +32,8 @@ import com.google.firebase.crashlytics.buildtools.reloc.org.apache.http.protocol
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,10 +44,20 @@ public class MainActivity extends AppCompatActivity {
     private CustomReceiver mReceiver = new CustomReceiver();
     private static final String ACTION_CUSTOM_BROADCAST =
             BuildConfig.APPLICATION_ID + ".ACTION_CUSTOM_BROADCAST";
+    private static final String LOGIN_SUCCESS_ACTION = "com.example.LOGIN_SUCCESS";
+    private static final String USERNAME_EXTRA = "com.example.USERNAME";
+
+    private static final String DataBaseName = "DataBaseIt";
+    private static final int DataBaseVersion = 1;
+    private static String DataBaseTable = "Users";
+    private static SQLiteDatabase db;
+    private SqlDataBaseHelper sqlDataBaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 建立SQLiteOpenHelper物件
+        sqlDataBaseHelper = new SqlDataBaseHelper(MainActivity.this,DataBaseName,null,DataBaseVersion,DataBaseTable);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
@@ -83,10 +99,22 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-
     }
 
+public void logout(View view){
+    db = sqlDataBaseHelper.getWritableDatabase(); // 開啟資料庫
+    ContentValues values = new ContentValues();
+    values.put("isOnline",0);
+    String isOnline_selection = "account = ?";
+    TextView textView = findViewById(R.id.user);
+    String username = textView.getText().toString();
+    String[] isOnline_selectionArgs = {username};
+    textView.setText("Guest");
+    int count = db.update(DataBaseTable,values,isOnline_selection,isOnline_selectionArgs);
 
+    Toast.makeText(this, "成功登出", Toast.LENGTH_SHORT).show();
+
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -128,4 +156,28 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this)
                 .unregisterReceiver(mReceiver);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(LOGIN_SUCCESS_ACTION);
+        LocalBroadcastManager.getInstance(this).registerReceiver(LoginReceiver, filter);
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(LoginReceiver);
+    }
+    private BroadcastReceiver LoginReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(LOGIN_SUCCESS_ACTION)) {
+                String username = intent.getStringExtra(USERNAME_EXTRA);
+                TextView textView = findViewById(R.id.user);
+
+                textView.setText(username);
+            }
+        }
+    };
 }
