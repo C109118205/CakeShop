@@ -33,6 +33,7 @@
     <string name="todo">TODO</string>
     <string name="logout">登出</string>
     <string name="Guest">Guest</string>
+    <string name="menu_customer">客服</string>
 
     <string-array name="product_cost">
         <item>1</item>

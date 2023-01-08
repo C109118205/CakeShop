@@ -21,7 +21,7 @@ public class SqlDataBaseHelper extends SQLiteOpenHelper {
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "account text not null," +
                 "password TEXT not null," +
-                "isOnline boolean default 0 "+
+                "isOnline INTEGER default 0 "+
                 ")";
         sqLiteDatabase.execSQL(SqlTable);
     }

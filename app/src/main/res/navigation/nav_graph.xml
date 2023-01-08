@@ -46,6 +46,11 @@
         android:id="@+id/nav_history"
         android:name="com.example.cakeshop.ui.history.HistoryFragment"
         android:label="@string/menu_history"
-        tools:layout="@layout/fragment_shop" />
+        tools:layout="@layout/fragment_history" />
+    <fragment
+        android:id="@+id/nav_customer"
+        android:name="com.example.cakeshop.ui.customer.Customer_ServiceFragment"
+        android:label="@string/menu_customer"
+        tools:layout="@layout/fragment_customer_service" />
 
 </navigation>

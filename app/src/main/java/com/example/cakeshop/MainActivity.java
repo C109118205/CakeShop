@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.appBarMain.toolbar);
+        binding.appBarMain.fab.setVisibility(View.VISIBLE);
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,10 +90,11 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.HomeFragment, R.id.nav_shop,R.id.nav_history)
+                R.id.HomeFragment, R.id.nav_shop,R.id.nav_history,R.id.nav_customer)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);

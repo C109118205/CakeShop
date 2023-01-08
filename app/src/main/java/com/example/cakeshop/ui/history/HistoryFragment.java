@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HistoryFragment extends Fragment {
-    public static String[] HistoryID,History_name,History_price,History_image,imagePath;
+    public static String[] HistoryID,History_name,History_price,History_image;
 
     private FragmentHistoryBinding binding;
     private static final String DataBaseName = "DataShop";

@@ -98,40 +98,33 @@ public class LoginFragment extends Fragment {
                 String username = binding.EditUserName.getText().toString();
                 String password = binding.editTextTextPassword.getText().toString();
 
-                String [] projection = {
-                        "account",
-                        "password"
-                };
 
+                //查詢使用者
+                String [] projection = {"account","password"};
                 String selection = "account = ? and password = ?";
                 String[] selectionArgs = { username ,password};
-
-
-                Cursor cursor  = db.query(
-                        DataBaseTable,
-                        projection,
-                        selection,
-                        selectionArgs,
-                        null,
-                        null,
-                        null
-                );
+                Cursor cursor  = db.query(DataBaseTable,projection,selection,selectionArgs,null,null,null);
                 int cursorCount = cursor.getCount();
 
-
+                //判斷是否有該使用者
                 if (cursorCount>0){
                     getDialog(Login=true,username);
+                    //廣播username值至MainActivity
                     Intent intent = new Intent(LOGIN_SUCCESS_ACTION);
                     intent.putExtra(USERNAME_EXTRA, username);
                     LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
+
+                    //更新資料庫該使用者正在登入
                     ContentValues values = new ContentValues();
                     values.put("isOnline",1);
                     String isOnline_selection = "account = ?";
                     String[] isOnline_selectionArgs = {username};
                     int count = db.update(DataBaseTable,values,isOnline_selection,isOnline_selectionArgs);
 
+                    //寫入preferences目前使用者
                     editor = preferences.edit();
 
+                    //是否有勾選"記住我"判斷
                     if (binding.remember.isChecked()){
                         editor.putBoolean("remember_password",true);
                         editor.putString("account",username);
@@ -188,7 +181,7 @@ public class LoginFragment extends Fragment {
     }
 
 
-//
+    //廣播username
     private BroadcastReceiver LoginReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
